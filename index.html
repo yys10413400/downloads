@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>프로젝트 다운로드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf6ef;
+    --card: #ffffff;
+    --ink: #2b2620;
+    --muted: #7a7064;
+    --line: #ece3d6;
+    --accent: #e8743b;
+    --accent-ink: #ffffff;
+    --soft: #fdeee4;
+    --ok: #2f9e6b;
+    --err: #c94a3a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1c1915;
+      --card: #26221d;
+      --ink: #f2ece3;
+      --muted: #a89d8f;
+      --line: #3a342c;
+      --accent: #f08a52;
+      --accent-ink: #1c1915;
+      --soft: #3a2a20;
+      --ok: #5cc795;
+      --err: #ee7d6d;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1c1915; --card: #26221d; --ink: #f2ece3; --muted: #a89d8f; --line: #3a342c;
+    --accent: #f08a52; --accent-ink: #1c1915; --soft: #3a2a20; --ok: #5cc795; --err: #ee7d6d;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Noto Sans KR", system-ui, sans-serif;
+    line-height: 1.55;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 48px 16px 64px; }
+  header { margin-bottom: 28px; }
+  h1 {
+    font-family: "Gowun Dodum", "Noto Sans KR", sans-serif;
+    font-size: clamp(28px, 6vw, 38px);
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .lead { color: var(--muted); margin: 0; }
+  .bar {
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
+    margin: 24px 0 16px;
+  }
+  .bar p { margin: 0; color: var(--muted); font-size: 14px; }
+  ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+  li {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px 20px;
+    display: flex; gap: 16px; align-items: center;
+  }
+  .emoji {
+    flex: none; width: 48px; height: 48px; border-radius: 12px;
+    display: grid; place-items: center; font-size: 26px; background: var(--soft);
+  }
+  .info { flex: 1; min-width: 0; }
+  .info h2 { font-size: 17px; margin: 0 0 2px; font-weight: 700; }
+  .info p { margin: 0; color: var(--muted); font-size: 14px; }
+  .info .status { font-size: 13px; margin-top: 4px; min-height: 1.2em; }
+  .status.ok { color: var(--ok); }
+  .status.err { color: var(--err); }
+  .actions { flex: none; display: flex; gap: 8px; align-items: center; }
+  button, .link {
+    font: inherit; font-size: 14px; font-weight: 500;
+    border-radius: 10px; padding: 9px 14px; cursor: pointer;
+    border: 1px solid transparent; text-decoration: none; white-space: nowrap;
+    transition: transform .08s ease, opacity .15s ease;
+  }
+  button:active, .link:active { transform: scale(.97); }
+  button { background: var(--accent); color: var(--accent-ink); }
+  button:disabled { opacity: .6; cursor: progress; }
+  .link { background: transparent; color: var(--ink); border-color: var(--line); }
+  .all { padding: 11px 18px; font-size: 15px; }
+  button:focus-visible, .link:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  footer { margin-top: 32px; color: var(--muted); font-size: 13px; }
+  footer p { margin: 4px 0; }
+  @media (max-width: 560px) {
+    li { flex-wrap: wrap; }
+    .actions { width: 100%; }
+    .actions > * { flex: 1; text-align: center; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>프로젝트 다운로드</h1>
+    <p class="lead">버튼을 누르면 HTML 파일 하나로 받아져요. 받은 파일은 더블클릭하면 바로 열려요.</p>
+  </header>
+
+  <div class="bar">
+    <p>그림 파일까지 HTML 안에 넣어서 받아요.</p>
+    <button class="all" id="all">모두 받기</button>
+  </div>
+
+  <ul id="list"></ul>
+
+  <footer>
+    <p>카메라를 쓰는 게임은 처음 열 때 카메라를 허용해 주세요.</p>
+    <p>버튼을 누를 때마다 최신 버전으로 받아져요.</p>
+  </footer>
+</main>
+
+<script>
+const BASE = "https://yys10413400.github.io";
+const ITEMS = [
+  { emoji: "💌", title: "비밀 감정 카드", desc: "수업 · 감정카드", path: "/class-lessons/감정카드.html", file: "감정카드.html" },
+  { emoji: "🎵", title: "소리 한스푼", desc: "수업 · 내가 꾸민 메뉴가 음악이 돼요", path: "/class-lessons/소리한스푼.html", file: "소리한스푼.html" },
+  { emoji: "🧙", title: "픽셀 마법사 연구소", desc: "픽셀마법사연구소", path: "/pixel-magic-lab/pixel-magic-lab.html", file: "픽셀마법사연구소.html" },
+  { emoji: "🖐️", title: "손으로 놀자", desc: "motion-game-assets · 카메라 사용", path: "/motion-game-assets/손으로놀자.html", file: "손으로놀자.html" },
+  { emoji: "✈️", title: "Hand Flight", desc: "인스타 · 카메라 사용", path: "/hand-flight/hand-flight/", file: "hand-flight.html" },
+];
+
+const INLINE_EXT = /\.(png|jpe?g|gif|webp|svg|avif|ico|mp3|wav|ogg|m4a|woff2?|ttf|otf)(\?.*)?$/i;
+const SKIP = /^(https?:|data:|blob:|#|javascript:|mailto:|tel:|\/\/|about:)/i;
+
+function toDataURL(blob) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result);
+    r.onerror = rej;
+    r.readAsDataURL(blob);
+  });
+}
+
+// 페이지를 받아서, 같이 쓰는 그림·소리 파일은 HTML 안에 넣고, 다른 페이지 링크는 온라인 주소로 바꿔요.
+async function buildStandalone(item) {
+  const pageUrl = new URL(item.path, BASE);
+  const resp = await fetch(pageUrl, { cache: "no-cache" });
+  if (!resp.ok) throw new Error("페이지를 못 불러왔어요 (" + resp.status + ")");
+  let html = await resp.text();
+
+  const attrRe = /(\s(?:src|href|data-href|poster)\s*=\s*)(["'])([^"'`$<>{}\s]+)\2/g;
+  const cssRe = /url\(\s*(["']?)([^"'()`$<>{}\s]+)\1\s*\)/g;
+
+  const values = new Set();
+  for (const m of html.matchAll(attrRe)) if (!SKIP.test(m[3])) values.add(m[3]);
+  for (const m of html.matchAll(cssRe)) if (!SKIP.test(m[2])) values.add(m[2]);
+
+  const map = new Map();
+  await Promise.all([...values].map(async (v) => {
+    const abs = new URL(v, pageUrl);
+    if (INLINE_EXT.test(abs.pathname)) {
+      try {
+        const r = await fetch(abs, { cache: "no-cache" });
+        if (r.ok) { map.set(v, await toDataURL(await r.blob())); return; }
+      } catch (e) { /* 못 받으면 온라인 주소로 둬요 */ }
+    }
+    map.set(v, abs.href);
+  }));
+
+  html = html.replace(attrRe, (all, pre, q, v) => map.has(v) ? pre + q + map.get(v) + q : all);
+  html = html.replace(cssRe, (all, q, v) => map.has(v) ? "url(" + q + map.get(v) + q + ")" : all);
+  return new Blob([html], { type: "text/html;charset=utf-8" });
+}
+
+function save(blob, name) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+}
+
+function sizeText(bytes) {
+  return bytes > 1024 * 1024 ? (bytes / 1024 / 1024).toFixed(1) + "MB" : Math.max(1, Math.round(bytes / 1024)) + "KB";
+}
+
+async function download(item, btn, status) {
+  btn.disabled = true;
+  const label = btn.textContent;
+  btn.textContent = "준비 중…";
+  status.className = "status";
+  status.textContent = "";
+  try {
+    const blob = await buildStandalone(item);
+    save(blob, item.file);
+    status.className = "status ok";
+    status.textContent = "받았어요 · " + item.file + " (" + sizeText(blob.size) + ")";
+  } catch (e) {
+    status.className = "status err";
+    status.textContent = "받지 못했어요. 인터넷 연결을 확인하고 다시 눌러 주세요.";
+  } finally {
+    btn.disabled = false;
+    btn.textContent = label;
+  }
+}
+
+const list = document.getElementById("list");
+const rows = ITEMS.map((item) => {
+  const li = document.createElement("li");
+  li.innerHTML =
+    '<div class="emoji" aria-hidden="true"></div>' +
+    '<div class="info"><h2></h2><p></p><div class="status" aria-live="polite"></div></div>' +
+    '<div class="actions"><a class="link" target="_blank" rel="noopener">열어보기</a><button type="button">받기</button></div>';
+  li.querySelector(".emoji").textContent = item.emoji;
+  li.querySelector("h2").textContent = item.title;
+  li.querySelector(".info p").textContent = item.desc;
+  li.querySelector(".link").href = new URL(item.path, BASE).href;
+  const btn = li.querySelector("button");
+  const status = li.querySelector(".status");
+  btn.setAttribute("aria-label", item.title + " 받기");
+  btn.addEventListener("click", () => download(item, btn, status));
+  list.appendChild(li);
+  return { item, btn, status };
+});
+
+document.getElementById("all").addEventListener("click", async (e) => {
+  const all = e.currentTarget;
+  all.disabled = true;
+  for (const r of rows) {
+    await download(r.item, r.btn, r.status);
+    await new Promise((res) => setTimeout(res, 600));
+  }
+  all.disabled = false;
+});
+</script>
+</body>
+</html>
