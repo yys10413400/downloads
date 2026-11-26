@@ -104,7 +104,7 @@
 <main>
   <header>
     <h1>프로젝트 다운로드</h1>
-    <p class="lead">버튼을 누르면 HTML 파일 하나로 받아져요. 받은 파일은 더블클릭하면 바로 열려요.</p>
+    <p class="lead">버튼을 누르면 HTML 파일 하나로 받아져요. 받은 파일은 더블클릭하면 바로 열려요. 파일이 아주 많은 별마당은 압축 파일로 받아져요.</p>
   </header>
 
   <div class="bar">
@@ -128,6 +128,8 @@ const ITEMS = [
   { emoji: "🧙", title: "픽셀 마법사 연구소", desc: "픽셀마법사연구소", path: "/pixel-magic-lab/pixel-magic-lab.html", file: "픽셀마법사연구소.html" },
   { emoji: "🖐️", title: "손으로 놀자", desc: "motion-game-assets · 카메라 사용", path: "/motion-game-assets/손으로놀자.html", file: "손으로놀자.html" },
   { emoji: "✈️", title: "Hand Flight", desc: "인스타 · 카메라 사용", path: "/hand-flight/hand-flight/", file: "hand-flight.html" },
+  { emoji: "⭐", title: "별마당", desc: "압축 파일(약 70MB) · 풀어서 index.html 열기", path: "/makepark/",
+    zip: "https://github.com/yys10413400/makepark/archive/refs/heads/main.zip", file: "makepark-main.zip" },
 ];
 
 const INLINE_EXT = /\.(png|jpe?g|gif|webp|svg|avif|ico|mp3|wav|ogg|m4a|woff2?|ttf|otf)(\?.*)?$/i;
@@ -194,6 +196,19 @@ async function download(item, btn, status) {
   btn.textContent = "준비 중…";
   status.className = "status";
   status.textContent = "";
+  if (item.zip) {
+    // 파일이 많은 앱은 GitHub에서 최신 압축 파일을 그대로 받아요.
+    const a = document.createElement("a");
+    a.href = item.zip;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    status.className = "status ok";
+    status.textContent = "받기 시작했어요 · 압축을 풀고 안의 index.html을 열어 주세요.";
+    btn.disabled = false;
+    btn.textContent = label;
+    return;
+  }
   try {
     const blob = await buildStandalone(item);
     save(blob, item.file);
